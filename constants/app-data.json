@@ -1,0 +1,30 @@
+{
+  "clients": [
+    {
+      "id": 1,
+      "name": "Client A"
+    },
+    {
+      "id": 2,
+      "name": "Client B"
+    },
+    {
+      "id": 3,
+      "name": "Client C"
+    }
+  ],
+  "categories": [
+    {
+      "id": 1,
+      "name": "Goal Evidence"
+    },
+    {
+      "id": 2,
+      "name": "Support Coordination"
+    },
+    {
+      "id": 3,
+      "name": "Active Duty"
+    }
+  ]
+}
