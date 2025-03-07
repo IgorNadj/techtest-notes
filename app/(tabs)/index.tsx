@@ -1,5 +1,7 @@
+import { SafeAreaView, View } from 'react-native';
 import { ListItem, VStack, Text } from '@react-native-material/core';
-import { SafeAreaView } from 'react-native';
+import { NewNoteButton } from '../../components/NewNoteButton';
+
 
 const FAKE_DATA = [
   { id: 1, note: 'This is a note' },
@@ -10,15 +12,22 @@ const FAKE_DATA = [
   { id: 6, note: 'This is a note' }, 
 ]
 
+const onNewNoteStart = () => {
+  console.log('pressed');
+}
+
 export default function HomeScreen() {
   return (
     <SafeAreaView>
-      <Text variant="h6" style={{ margin: 20 }}>Notes Test App - Igor Nadj</Text>
-      <VStack>
-        <>
-          {FAKE_DATA.map((item) => <ListItem key={item.id} title={item.note} />)}
-        </>
-      </VStack>
+      <View>
+        <Text variant="h6" style={{ margin: 20 }}>Notes Test App</Text>
+        <NewNoteButton onPress={onNewNoteStart} />
+        <VStack>
+          <>
+            {FAKE_DATA.map((item) => <ListItem key={item.id} title={item.note} />)}
+          </>
+        </VStack>
+      </View>
     </SafeAreaView>
   );
 }
