@@ -19,12 +19,15 @@ const onNewNoteStart = () => {
     console.log('pressed');
 }
 
-const onSubmitNewNote = (note: NewNote) => {
-    console.log('submitted', note);
-}
 
 export default function HomeScreen() {
     const [newNoteDialogVisible, setNewNoteDialogVisible] = useState(false);
+    const [notes, setNotes] = useState(FAKE_DATA);
+
+    const onSubmitNewNote = (newNote: NewNote) => {
+        console.log('submitted', newNote);
+        setNotes([...notes, {...newNote, id: notes.length + 1}]);
+    }
 
     return (
         <SafeAreaView>
@@ -34,7 +37,7 @@ export default function HomeScreen() {
 
                 <VStack>
                     <>
-                        {FAKE_DATA.map((item) => <ListItem key={item.id} title={item.note}/>)}
+                        {notes.map((item) => <ListItem key={item.id} title={item.note}/>)}
                     </>
                 </VStack>
 
