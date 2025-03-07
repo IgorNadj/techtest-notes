@@ -1,16 +1,6 @@
-import {
-    Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogHeader,
-    Provider,
-    Stack,
-    Text,
-    TextInput
-} from "@react-native-material/core";
 import {useState} from "react";
 import {NewNote} from "@/types/types";
+import {Modal, Portal, Button, TextInput} from 'react-native-paper';
 
 
 type NewNoteDialogProps = {
@@ -19,36 +9,24 @@ type NewNoteDialogProps = {
     onDismiss: () => void;
 }
 
+const containerStyle = {backgroundColor: 'white', padding: 20};
+
 export const NewNoteDialog = ({visible, onSubmit, onDismiss}: NewNoteDialogProps) => {
     const [note, setNote] = useState('');
 
     return (
-        <Provider>
-            <Dialog visible={visible} onDismiss={onDismiss}>
-                <DialogHeader title="Add Note"/>
-                <DialogContent>
-                    <Stack>
-                        <TextInput multiline label="Note" variant="standard" value={note} onChangeText={setNote}/>
-                    </Stack>
-                </DialogContent>
-                <DialogActions>
-                    <Button
-                        title="Cancel"
-                        compact
-                        variant="text"
-                        onPress={onDismiss}
-                    />
-                    <Button
-                        title="Ok"
-                        compact
-                        variant="text"
-                        onPress={() => {
-                            onSubmit({note});
-                            setNote('');
-                        }}
-                    />
-                </DialogActions>
-            </Dialog>
-        </Provider>
+        <>
+            <Portal>
+                <Modal visible={visible} onDismiss={onDismiss} contentContainerStyle={containerStyle}>
+                    <TextInput multiline label="Note" value={note} onChangeText={setNote}/>
+                    <Button style={{marginTop: 30}} onPress={() => {
+                        onSubmit({note});
+                        setNote('');
+                    }}>
+                        Save
+                    </Button>
+                </Modal>
+            </Portal>
+        </>
     );
 }

@@ -1,9 +1,12 @@
 import {SafeAreaView, View} from 'react-native';
-import {ListItem, VStack, Text} from '@react-native-material/core';
+
 import {NewNoteButton} from '@/components/NewNoteButton';
 import {useState} from "react";
 import {NewNoteDialog} from '@/components/NewNoteDialog';
 import {NewNote} from "@/types/types";
+import {PaperProvider} from "react-native-paper";
+import {Text} from 'react-native-paper';
+import {List} from 'react-native-paper';
 
 
 const FAKE_DATA = [
@@ -29,25 +32,32 @@ export default function HomeScreen() {
         setNotes([...notes, {...newNote, id: notes.length + 1}]);
     }
 
+    console.log('render');
+
     return (
-        <SafeAreaView>
-            <View>
-                <Text variant="h6" style={{margin: 20}}>Notes Test App</Text>
-                <NewNoteButton onPress={() => setNewNoteDialogVisible(true)}/>
+        <PaperProvider>
+            <SafeAreaView>
+                <View>
+                    <Text variant="headlineMedium" style={{margin: 20}}>Notes Test App</Text>
+                    <NewNoteButton onPress={() => {
+                        setNewNoteDialogVisible(true);
+                        console.log('open modal');
+                    }}/>
 
-                <VStack>
+
                     <>
-                        {notes.map((item) => <ListItem key={item.id} title={item.note}/>)}
+                        {notes.map((item) => <List.Item key={item.id} title={item.note}/>)}
                     </>
-                </VStack>
 
-                <NewNoteDialog visible={newNoteDialogVisible} onDismiss={() => setNewNoteDialogVisible(false)}
-                               onSubmit={(note: NewNote) => {
-                                   onSubmitNewNote(note);
-                                   setNewNoteDialogVisible(false)
-                               }}/>
-            </View>
-        </SafeAreaView>
+
+                    <NewNoteDialog visible={newNoteDialogVisible} onDismiss={() => setNewNoteDialogVisible(false)}
+                                   onSubmit={(note: NewNote) => {
+                                       onSubmitNewNote(note);
+                                       setNewNoteDialogVisible(false)
+                                   }}/>
+                </View>
+            </SafeAreaView>
+        </PaperProvider>
     );
 }
 

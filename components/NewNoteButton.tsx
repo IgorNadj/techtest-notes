@@ -1,5 +1,5 @@
-import Icon from "@expo/vector-icons/MaterialCommunityIcons";
-import {FAB, Box} from '@react-native-material/core';
+import {FAB} from 'react-native-paper';
+import {StyleSheet} from 'react-native';
 
 
 type NewNoteButtonProps = {
@@ -7,13 +7,17 @@ type NewNoteButtonProps = {
 }
 
 export const NewNoteButton = ({onPress}: NewNoteButtonProps) =>
-    <Box style={{
-        position: 'absolute',
-        top: 20,
-        right: 20,
-        zIndex: 1000,
-    }}>
-        <FAB onPress={(e) => {
-            onPress()
-        }} color="primary" icon={props => <Icon name="plus" {...props} />}/>
-    </Box>
+
+    <FAB onPress={(e) => {
+        onPress()
+    }} icon="plus" style={styles.fab}/>
+
+
+const styles = StyleSheet.create({
+    fab: {
+        // position: 'absolute',
+        // margin: 16,
+        // right: 0,
+        // bottom: 0,
+    },
+})
