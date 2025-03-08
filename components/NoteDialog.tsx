@@ -1,5 +1,5 @@
 import {useState} from "react";
-import {Category, NewNote} from "@/types/types";
+import {Category, NewNote, Note} from "@/types/types";
 import {Modal, Portal, Button, TextInput, RadioButton, Text} from 'react-native-paper';
 
 import AppData from '../constants/app-data.json';
@@ -14,18 +14,20 @@ type NewNoteDialogProps = {
     visible: boolean;
     onSubmit: (note: NewNote) => void;
     onDismiss: () => void;
+    onDelete: (note: Note) => void;
+    existingNote: Note | null;
 }
 
 const containerStyle = {backgroundColor: 'white', padding: 20, margin: 20};
 
 
-export const NewNoteDialog = ({visible, onSubmit, onDismiss}: NewNoteDialogProps) => {
-    const [note, setNote] = useState('');
-    const [clientId, setClientId] = useState<number>(defaultClient.id);
-    const [categoryId, setCategoryId] = useState<number>(defaultCategory.id);
+export const NoteDialog = ({visible, onSubmit, onDismiss, onDelete, existingNote}: NewNoteDialogProps) => {
+    const [noteText, setNoteText] = useState(existingNote ? existingNote.note : '');
+    const [clientId, setClientId] = useState<number>(existingNote ? existingNote.clientId : defaultClient.id);
+    const [categoryId, setCategoryId] = useState<number>(existingNote ? existingNote.categoryId : defaultCategory.id);
 
     const reset = () => {
-        setNote('');
+        setNoteText('');
         setClientId(defaultClient.id);
         setCategoryId(defaultCategory.id);
     }
@@ -36,7 +38,7 @@ export const NewNoteDialog = ({visible, onSubmit, onDismiss}: NewNoteDialogProps
                 <Modal visible={visible} onDismiss={onDismiss} contentContainerStyle={containerStyle}>
                     <ScrollView>
                         <Label label="Note"/>
-                        <TextInput multiline value={note} onChangeText={setNote}/>
+                        <TextInput multiline value={noteText} onChangeText={setNoteText}/>
 
                         <Label label="Category"/>
                         <RadioButton.Group onValueChange={value => setCategoryId(parseInt(value, 10))}
@@ -57,12 +59,21 @@ export const NewNoteDialog = ({visible, onSubmit, onDismiss}: NewNoteDialogProps
 
                         </Picker>
 
-                        <Button style={{marginTop: 30}} onPress={() => {
-                            onSubmit({note, categoryId, clientId});
+                        <Button style={{}} onPress={() => {
+                            onSubmit({note: noteText, categoryId, clientId});
                             reset();
                         }}>
                             Save
                         </Button>
+                        {existingNote && (
+                            <Button style={{}} onPress={() => {
+                                onDelete(existingNote);
+                                reset();
+                            }}>
+                                Delete
+                            </Button>
+                        )}
+
                     </ScrollView>
                 </Modal>
             </Portal>

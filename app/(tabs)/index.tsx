@@ -2,26 +2,35 @@ import {SafeAreaView, ScrollView, View} from 'react-native';
 
 import {NewNoteButton} from '@/components/NewNoteButton';
 import {useState} from "react";
-import {NewNoteDialog} from '@/components/NewNoteDialog';
+import {NoteDialog} from '@/components/NoteDialog';
 import {NewNote, Note} from "@/types/types";
 import {PaperProvider} from "react-native-paper";
 import {Text} from 'react-native-paper';
 import {List} from 'react-native-paper';
 import {useLocalStorage} from "@/hooks/useLocalStorage";
+import {uuid} from "expo-modules-core";
 
 
 export default function HomeScreen() {
-    const [newNoteDialogVisible, setNewNoteDialogVisible] = useState(false);
-    // const [notes, setNotes] = useState(FAKE_DATA);
+    const [noteDialogVisible, setNoteDialogVisible] = useState(false);
+    const [currentlyEditingNote, setCurrentlyEditingNote] = useState<Note | null>(null);
 
     const {value: notes, setValue: setNotes, isLoading} = useLocalStorage<Note[]>('notes', []);
 
     const onSubmitNewNote = (newNote: NewNote) => {
         console.log('submitted', newNote);
-        setNotes([...notes, {...newNote, id: notes.length + 1}]);
+        const newId = uuid.v4();
+        setNotes([...notes, {...newNote, id: newId}]);
     }
 
-    console.log('render');
+    const onDeleteNote = (note: Note) => {
+        setNotes(notes.filter((n) => n.id !== note.id));
+    }
+
+    const openEditDialog = (note: Note) => {
+        setCurrentlyEditingNote(note);
+        setNoteDialogVisible(true);
+    }
 
     return (
         <PaperProvider>
@@ -31,18 +40,29 @@ export default function HomeScreen() {
 
 
                     <ScrollView>
-                        {notes.map((item) => <List.Item key={item.id} title={item.note}/>)}
+                        {notes.map((item) => <List.Item key={item.id} title={item.note}
+                                                        onPress={() => openEditDialog(item)}/>)}
                     </ScrollView>
 
 
-                    <NewNoteDialog visible={newNoteDialogVisible} onDismiss={() => setNewNoteDialogVisible(false)}
-                                   onSubmit={(note: NewNote) => {
-                                       onSubmitNewNote(note);
-                                       setNewNoteDialogVisible(false)
-                                   }}/>
+                    <NoteDialog visible={noteDialogVisible}
+                                onDismiss={() => setNoteDialogVisible(false)}
+                                onSubmit={(note: NewNote) => {
+                                    onSubmitNewNote(note);
+                                    setNoteDialogVisible(false)
+                                }}
+                                onDelete={(note: Note) => {
+                                    onDeleteNote(note);
+                                    setCurrentlyEditingNote(null);
+                                    setNoteDialogVisible(false);
+                                }}
+                                existingNote={currentlyEditingNote}
+                                key={currentlyEditingNote?.id ?? null}
+                    />
 
                     <NewNoteButton onPress={() => {
-                        setNewNoteDialogVisible(true);
+                        setCurrentlyEditingNote(null);
+                        setNoteDialogVisible(true);
                         console.log('open modal');
                     }}/>
                 </View>
