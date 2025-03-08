@@ -28,10 +28,6 @@ export default function HomeScreen() {
             <SafeAreaView>
                 <View>
                     <Text variant="headlineMedium" style={{margin: 20}}>Notes Test App</Text>
-                    <NewNoteButton onPress={() => {
-                        setNewNoteDialogVisible(true);
-                        console.log('open modal');
-                    }}/>
 
 
                     <ScrollView>
@@ -44,6 +40,11 @@ export default function HomeScreen() {
                                        onSubmitNewNote(note);
                                        setNewNoteDialogVisible(false)
                                    }}/>
+
+                    <NewNoteButton onPress={() => {
+                        setNewNoteDialogVisible(true);
+                        console.log('open modal');
+                    }}/>
                 </View>
             </SafeAreaView>
         </PaperProvider>
